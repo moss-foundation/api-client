@@ -276,8 +276,7 @@ mod test {
     use std::path::Path;
     use std::sync::Arc;
     use std::time::SystemTime;
-
-    use crate::adapters::auth::oauth::OAuthAgent;
+    use crate::adapters::auth::oauth::GitHubAgent;
     use crate::repo::RepoHandle;
     use crate::TestStorage;
 
@@ -291,7 +290,7 @@ mod test {
         let repo_path = Path::new("test-repo");
 
         let mut auth_agent =
-            OAuthAgent::read_from_file().unwrap_or_else(|_| Arc::new(OAuthAgent::github()));
+            GitHubAgent::read_from_file().unwrap_or_else(|_| Arc::new(GitHubAgent::new()));
 
         let repo = RepoHandle::clone(&repo_url, &repo_path, auth_agent).unwrap();
 
@@ -321,7 +320,7 @@ mod test {
         let repo_path = Path::new("test-repo");
 
         let mut auth_agent =
-            OAuthAgent::read_from_file().unwrap_or_else(|_| Arc::new(OAuthAgent::github()));
+            GitHubAgent::read_from_file().unwrap_or_else(|_| Arc::new(GitHubAgent::new()));
 
         let repo = RepoHandle::open(repo_path, auth_agent).unwrap();
 

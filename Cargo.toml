@@ -2,6 +2,7 @@
 resolver = "1"
 members = [
     "crates/moss-git",
+    "crates/moss-git-hosting-provider",
     "crates/moss-tauri",
     "crates/moss-text",
     "crates/moss-collection",
@@ -19,6 +20,7 @@ moss_collection = { path = "crates/moss-collection" }
 moss_db = { path = "crates/moss-db" }
 moss_app = { path = "crates/moss-app" }
 moss_git = { path = "crates/moss-git" }
+moss_git_hosting_provider = { path = "crates/moss-git-hosting-provider" }
 moss_fs = { path = "crates/moss-fs" }
 
 tauri = { version = "2.2.5", default-features = false }
@@ -55,3 +57,4 @@ sled = "0.34.7"
 bincode = "1.3.3"
 async-trait = "0.1.86"
 patricia_tree = "0.9.0"
+url = "2.5.4"

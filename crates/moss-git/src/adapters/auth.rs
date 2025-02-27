@@ -2,44 +2,6 @@ pub mod oauth;
 pub mod ssh;
 
 #[cfg(test)]
-mod github_tests {
-    use std::path::{Path, PathBuf};
-    use std::sync::Arc;
-
-    use crate::adapters::auth::{oauth::OAuthAgent, ssh::SSHAgent};
-    use crate::repo::RepoHandle;
-    use crate::TestStorage;
-
-    // Run cargo test cloning_with_https -- --nocapture
-    #[test]
-    fn cloning_with_https() {
-        // From example: https://github.com/ramosbugs/oauth2-rs/blob/main/examples/github.rs
-        dotenv::dotenv().ok();
-        let repo_url = &dotenv::var("GITHUB_TEST_REPO_HTTPS").unwrap();
-        let repo_path = Path::new("test-repo");
-
-        let auth_agent =
-            OAuthAgent::read_from_file().unwrap_or_else(|_| Arc::new(OAuthAgent::github()));
-
-        let repo = RepoHandle::clone(repo_url, repo_path, auth_agent).unwrap();
-    }
-
-    #[test]
-    fn cloning_with_ssh() {
-        dotenv::dotenv().ok();
-        let repo_url = &dotenv::var("GITHUB_TEST_REPO_SSH").unwrap();
-        let repo_path = Path::new("test-repo");
-
-        let private = PathBuf::from(dotenv::var("GITHUB_SSH_PRIVATE").unwrap());
-        let public = PathBuf::from(dotenv::var("GITHUB_SSH_PUBLIC").unwrap());
-        let password = dotenv::var("GITHUB_SSH_PASSWORD").unwrap();
-
-        let auth_agent = Arc::new(SSHAgent::new(Some(public), private, Some(password.into())));
-        let repo = RepoHandle::clone(repo_url, repo_path, auth_agent).unwrap();
-    }
-}
-
-#[cfg(test)]
 mod gitlab_tests {
     use anyhow::Result;
     use std::collections::HashMap;
@@ -50,7 +12,7 @@ mod gitlab_tests {
     use parking_lot::Mutex;
     use zeroize::Zeroizing;
 
-    use crate::adapters::auth::{oauth::OAuthAgent, ssh::SSHAgent};
+    use crate::adapters::auth::{oauth::GitLabAgent, ssh::SSHAgent};
     use crate::repo::RepoHandle;
     use crate::TestStorage;
 
@@ -61,7 +23,7 @@ mod gitlab_tests {
         let repo_path = Path::new("test-repo-lab");
 
         let auth_agent =
-            OAuthAgent::read_from_file().unwrap_or_else(|_| Arc::new(OAuthAgent::gitlab()));
+            GitLabAgent::read_from_file().unwrap_or_else(|_| Arc::new(GitLabAgent::new()));
 
         let repo = RepoHandle::clone(repo_url, repo_path, auth_agent).unwrap();
     }
